@@ -1,0 +1,52 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `ingressos` DEFAULT CHARACTER SET utf8mb4 ;
+USE `ingressos` ;
+
+CREATE TABLE IF NOT EXISTS `ingressos`.`contas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `senha` VARCHAR(255) NOT NULL,
+  `cpf` INT(11) NOT NULL,
+  `organizador` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `ingressos`.`shows` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(255) NOT NULL,
+  `qnt_ingressos` INT NOT NULL,
+  `data` DATETIME NOT NULL,
+  `local` VARCHAR(255) NOT NULL,
+  `preco` FLOAT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `ingressos`.`ingressos` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `preco` FLOAT NOT NULL,
+  `data_compra` DATE NOT NULL,
+  `contas_id` INT NOT NULL,
+  `shows_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_ingressos_contas_idx` (`contas_id` ASC),
+  INDEX `fk_ingressos_shows1_idx` (`shows_id` ASC),
+  CONSTRAINT `fk_ingressos_contas`
+    FOREIGN KEY (`contas_id`)
+    REFERENCES `ingressos`.`contas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ingressos_shows1`
+    FOREIGN KEY (`shows_id`)
+    REFERENCES `ingressos`.`shows` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
